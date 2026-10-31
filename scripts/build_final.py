@@ -126,16 +126,27 @@ for vk, v in verse_meta.items():
     if j not in juz_first_page or pg < juz_first_page[j]:
         juz_first_page[j] = pg
 
+surah_bounds = {}
+for w in words:
+    sid = int(w["s"])
+    p = w["page"]
+    if sid not in surah_bounds:
+        surah_bounds[sid] = [p, p]
+    else:
+        surah_bounds[sid][0] = min(surah_bounds[sid][0], p)
+        surah_bounds[sid][1] = max(surah_bounds[sid][1], p)
+
 chapters_meta = []
 for c in chapters:
+    bounds = surah_bounds.get(c["id"], [c["pages"][0], c["pages"][1]])
     chapters_meta.append({
         "id": c["id"],
         "name": c["name_simple"],
         "ar": c["name_arabic"],
         "en": c["translated_name"]["name"],
         "verses": c["verses_count"],
-        "start": c["pages"][0],
-        "end": c["pages"][1],
+        "start": bounds[0],
+        "end": bounds[1],
         "rev": c["revelation_place"],
     })
 juz_meta = []
