@@ -11,6 +11,7 @@ place that word appears in the Qur'an.
   <img src="docs/word-panel.jpg" alt="Word panel with root and derived words" width="49%" />
 </p>
 <p align="center">
+  <img src="docs/lane-panel.jpg" alt="Lane's Lexicon article in the root panel" width="30%" />
   <img src="docs/mobile.jpg" alt="The reader on a phone" width="30%" />
 </p>
 
