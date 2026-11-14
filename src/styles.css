@@ -135,7 +135,7 @@ body {
     linear-gradient(180deg, var(--bg), var(--bg-2));
   color: var(--ink);
   font-family: 'Outfit', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -178,7 +178,7 @@ a:hover { text-decoration: underline; }
 }
 .header-main {
   max-width: 1480px; margin: 0 auto; padding: 11px 24px;
-  display: flex; align-items: center; gap: 20px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px;
 }
 .brand {
   display: flex; align-items: center; gap: 11px; background: none; border: 0; padding: 2px;
@@ -302,7 +302,7 @@ kbd {
    ========================================================================== */
 .mushaf-page {
   position: relative;
-  width: min(100%, 700px, calc((100dvh - 205px) * 0.72 * var(--font-scale, 1)));
+  width: min(100%, 700px, calc((100dvh - 205px) * 0.72 * var(--arabic-scale, 1)));
   min-width: 300px;
   aspect-ratio: 0.72;
   container-type: inline-size;
@@ -466,7 +466,13 @@ kbd {
 .meta-pill {
   border: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 55%, transparent);
   padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; letter-spacing: 0.01em;
+  font: inherit; font-size: 0.68rem;
 }
+.meta-pill.reflow-pill {
+  color: var(--emerald); border-color: color-mix(in srgb, var(--emerald) 28%, var(--line));
+  background: var(--emerald-soft); cursor: pointer;
+}
+.meta-pill.reflow-pill:hover { background: var(--emerald-softer); }
 .meta-surah { color: var(--ink-soft); font-weight: 500; padding: 0 3px; }
 .sajdah-pill { color: var(--gold-strong); border-color: var(--gold-soft); background: var(--gold-faint); }
 .page-meta-right { font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -811,6 +817,7 @@ html[data-theme='dark'] .word-panel { box-shadow: -18px 0 60px rgba(0, 0, 0, 0.4
 .popover-scrim { position: fixed; inset: 0; z-index: 90; }
 .settings-popover {
   position: fixed; top: calc(var(--header-h) + 6px); right: 16px; width: 344px; max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - var(--header-h) - 16px); overflow-y: auto;
   background: var(--paper); border: 1px solid var(--line); border-radius: 15px; padding: 15px;
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24); animation: panelIn 0.2s ease;
   z-index: 91;
@@ -824,7 +831,11 @@ html[data-theme='dark'] .word-panel { box-shadow: -18px 0 60px rgba(0, 0, 0, 0.4
 .theme-toggle button.is-active { background: var(--paper); color: var(--emerald); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
 .font-size-row { display: flex; align-items: center; gap: 7px; }
 .font-size-row input[type='range'] { flex: 1; accent-color: var(--emerald); height: 3px; }
-.font-size-value { font-size: 0.62rem; color: var(--muted); width: 33px; text-align: right; font-variant-numeric: tabular-nums; }
+.font-size-value { font-size: 0.62rem; color: var(--muted); width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+.size-control-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 4px 0 2px; font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); }
+.size-control-head.english-head { margin-top: 14px; border-top: 1px solid var(--line-soft); padding-top: 11px; }
+.setting-hint { margin: 8px 0 0; font-size: 0.63rem; line-height: 1.5; color: var(--muted); }
+.english-preview { font-family: 'Outfit', sans-serif; font-size: 0.7rem; text-align: center; color: var(--ink-soft); }
 .plus-glyph { font-size: 1.1rem; line-height: 1; }
 .settings-preview { margin-top: 8px; padding: 9px; text-align: center; background: var(--paper-2); border: 1px solid var(--line-soft); border-radius: 9px; font-family: 'Scheherazade New', serif; color: var(--ink); line-height: 1.6; overflow: hidden; }
 .setting-switch { display: flex; align-items: center; gap: 10px; padding: 11px 0 4px; cursor: pointer; }
@@ -960,7 +971,6 @@ html[data-theme='dark'] .word-panel { box-shadow: -18px 0 60px rgba(0, 0, 0, 0.4
   .about-stats { grid-template-columns: repeat(2, 1fr); }
   .guide-grid { grid-template-columns: 1fr; }
   .settings-popover { top: calc(var(--header-h) + 4px); right: 8px; }
-  .size-setting { display: none; }
 }
 
 @media (max-width: 520px) {
@@ -1046,3 +1056,63 @@ html[data-theme='dark'] .word-panel { box-shadow: -18px 0 60px rgba(0, 0, 0, 0.4
   .lane-body { max-height: 190px; font-size: 0.73rem; }
   .lane-body.is-expanded { max-height: 52vh; }
 }
+
+
+/* ==========================================================================
+   Large-print mobile reflow
+   ========================================================================== */
+@media (max-width: 860px) {
+  .mushaf-page.is-reflow {
+    width: 100%;
+    min-width: 0;
+    aspect-ratio: auto;
+  }
+  .mushaf-page.is-reflow .mushaf-inner {
+    height: auto;
+    padding: 18px 16px 12px;
+  }
+  .mushaf-page.is-reflow .mushaf-lines,
+  .mushaf-page.is-reflow.is-frontispiece .mushaf-lines {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.42em;
+    padding: 8px 0;
+  }
+  .mushaf-page.is-reflow .ayah-line,
+  .mushaf-page.is-reflow.is-frontispiece .ayah-line {
+    font-size: calc(16px * var(--arabic-scale, 1)) !important;
+    line-height: 2.05;
+    text-align: right;
+    text-align-last: right;
+  }
+  .mushaf-page.is-reflow.is-frontispiece .ayah-line {
+    font-size: calc(17px * var(--arabic-scale, 1)) !important;
+  }
+  .mushaf-page.is-reflow .surah-band {
+    font-size: calc(16px * var(--arabic-scale, 1));
+    padding: 0.2em 0.4em;
+  }
+  .mushaf-page.is-reflow .basmala-line {
+    font-size: calc(14px * var(--arabic-scale, 1));
+    line-height: 1.9;
+  }
+  .mushaf-page.is-reflow .page-seal {
+    height: 24px;
+    margin-top: 8px;
+  }
+  .mushaf-page.is-reflow .page-crest {
+    margin-bottom: 2px;
+  }
+  .mushaf-page.is-reflow .line-item {
+    display: inline;
+  }
+}
+
+@media (max-width: 1100px) {
+  .page-turn { display: none; }
+}
+.settings-preview.english-preview {
+  font-family: 'Outfit', ui-sans-serif, sans-serif;
+}
+.size-reset { width: 100%; margin-top: 6px; }

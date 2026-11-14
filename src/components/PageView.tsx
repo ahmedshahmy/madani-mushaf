@@ -8,14 +8,15 @@ interface PageViewProps {
   meta: Meta | null
   selectedWordId: string | null
   onWordClick: (word: Word) => void
-  fontScale: number
+  arabicScale: number
+  reflow: boolean
 }
 
 function isWord(item: Word | EndMarker): item is Word {
   return isSegment(item)
 }
 
-export function PageView({ page, meta, selectedWordId, onWordClick, fontScale }: PageViewProps) {
+export function PageView({ page, meta, selectedWordId, onWordClick, arabicScale, reflow }: PageViewProps) {
   const chapterById = useMemo(() => new Map((meta?.chapters ?? []).map((c) => [c.id, c])), [meta])
   const shortPage = page.lines.length < 15
   const lineCount = shortPage ? page.lines.length : 15
@@ -27,6 +28,10 @@ export function PageView({ page, meta, selectedWordId, onWordClick, fontScale }:
   // grid would wrap and overlap.
   useEffect(() => {
     let cancelled = false
+    if (reflow) {
+      setFitPx(null)
+      return
+    }
     const measure = () => {
       const el = pageRef.current
       const inner = el?.querySelector<HTMLElement>('.mushaf-inner')
@@ -73,14 +78,14 @@ export function PageView({ page, meta, selectedWordId, onWordClick, fontScale }:
       ro.disconnect()
       window.removeEventListener('resize', measure)
     }
-  }, [page])
+  }, [page, reflow])
 
   return (
     <article
       ref={pageRef}
-      className={`mushaf-page ${shortPage ? 'is-frontispiece' : ''}`}
+      className={`mushaf-page ${shortPage ? 'is-frontispiece' : ''} ${reflow ? 'is-reflow' : ''}`}
       style={{
-        ['--font-scale' as string]: fontScale,
+        ['--arabic-scale' as string]: arabicScale,
         ['--line-count' as string]: lineCount,
         ...(fitPx ? { ['--fit-font-size' as string]: `${fitPx}px` } : {}),
       }}

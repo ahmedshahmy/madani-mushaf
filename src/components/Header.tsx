@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Info, Library, Moon, Search,
   Settings2, Sun,
@@ -27,8 +27,27 @@ export function Header({
   onOpenAbout, isBookmarked, onToggleBookmark, resolvedTheme, onToggleTheme,
 }: HeaderProps) {
   const [pageInput, setPageInput] = useState(String(pageNum))
+  const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => setPageInput(String(pageNum)), [pageNum])
+
+  // Keep the reader's fixed panel top in sync with the real header height,
+  // which changes when the English text size or viewport width changes.
+  useEffect(() => {
+    const el = headerRef.current
+    if (!el) return
+    const apply = () => {
+      document.documentElement.style.setProperty('--header-h', `${el.getBoundingClientRect().height}px`)
+    }
+    apply()
+    const ro = new ResizeObserver(apply)
+    ro.observe(el)
+    window.addEventListener('resize', apply)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', apply)
+    }
+  }, [])
 
   const currentChapter = useMemo(() => {
     if (!meta) return null
@@ -53,7 +72,7 @@ export function Header({
   }
 
   return (
-    <header className="app-header">
+    <header className="app-header" ref={headerRef}>
       <div className="header-main">
         <button className="brand" onClick={() => onGoPage(1)} aria-label="Go to the first page">
           <Logo />
@@ -153,7 +172,7 @@ export function Header({
           <button className="icon-btn" onClick={onToggleTheme} aria-label="Toggle theme" title="Toggle light / dark">
             {resolvedTheme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
-          <button className="icon-btn" onClick={onOpenSettings} aria-label="Reading settings" title="Reading settings">
+          <button className="icon-btn" onClick={onOpenSettings} aria-label="Reading settings and text size" title="Reading settings & text size">
             <Settings2 size={18} />
           </button>
           <button className="icon-btn hide-mobile" onClick={onOpenAbout} aria-label="About and sources" title="About & sources">

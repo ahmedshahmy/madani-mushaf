@@ -6,19 +6,26 @@ interface SettingsPopoverProps {
   onClose: () => void
   theme: ThemeChoice
   setTheme: (t: ThemeChoice) => void
-  fontScale: number
-  setFontScale: (n: number) => void
+  arabicScale: number
+  setArabicScale: (n: number) => void
+  uiScale: number
+  setUiScale: (n: number) => void
   showTranslit: boolean
   setShowTranslit: (v: boolean) => void
 }
 
+function clamp(n: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, Number(n.toFixed(2))))
+}
+
 export function SettingsPopover({
-  open, onClose, theme, setTheme, fontScale, setFontScale, showTranslit, setShowTranslit,
+  open, onClose, theme, setTheme, arabicScale, setArabicScale, uiScale, setUiScale,
+  showTranslit, setShowTranslit,
 }: SettingsPopoverProps) {
   if (!open) return null
   return (
     <div className="popover-scrim" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose() }}>
-      <div className="settings-popover" role="dialog" aria-modal="true" aria-label="Reading settings">
+      <div className="settings-popover" role="dialog" aria-modal="true" aria-label="Reading settings and text size">
         <div className="popover-head">
           <h3>Reading settings</h3>
           <button className="icon-btn" onClick={onClose} aria-label="Close settings"><X size={16} /></button>
@@ -40,35 +47,85 @@ export function SettingsPopover({
         </div>
 
         <div className="setting-block size-setting">
-          <div className="setting-label"><Type size={15} /> Arabic size</div>
+          <div className="setting-label"><Type size={15} /> Text size</div>
+
+          <div className="size-control-head">
+            <span>Arabic</span>
+            <span className="font-size-value">{Math.round(arabicScale * 100)}%</span>
+          </div>
           <div className="font-size-row">
             <button
               className="icon-btn"
-              onClick={() => setFontScale(Math.max(0.85, Number((fontScale - 0.1).toFixed(2))))}
+              onClick={() => setArabicScale(clamp(arabicScale - 0.05, 1, 1.7))}
               aria-label="Decrease Arabic size"
             >
               <Minus size={15} />
             </button>
             <input
               type="range"
-              min="0.85"
-              max="1.35"
+              min="1"
+              max="1.7"
               step="0.05"
-              value={fontScale}
-              onChange={(e) => setFontScale(Number(e.target.value))}
+              value={arabicScale}
+              onChange={(e) => setArabicScale(Number(e.target.value))}
               aria-label="Arabic font size"
             />
             <button
               className="icon-btn"
-              onClick={() => setFontScale(Math.min(1.35, Number((fontScale + 0.1).toFixed(2))))}
+              onClick={() => setArabicScale(clamp(arabicScale + 0.05, 1, 1.7))}
               aria-label="Increase Arabic size"
             >
               <span className="plus-glyph">+</span>
             </button>
-            <span className="font-size-value">{Math.round(fontScale * 100)}%</span>
           </div>
-          <div className="settings-preview" dir="rtl" style={{ fontSize: `${1.35 * fontScale}rem` }}>
+          <div
+            className="settings-preview arabic-preview"
+            dir="rtl"
+            style={{ fontSize: `${Math.min(1.7, 0.95 * arabicScale)}rem` }}
+          >
             بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+          </div>
+          <p className="setting-hint">
+            On phones, Arabic above 100% switches the mushaf page to a flowing, scrollable
+            large-print layout. The fixed 15-line page returns at 100%.
+          </p>
+          {arabicScale > 1 ? (
+            <button className="btn btn-ghost size-reset" onClick={() => setArabicScale(1)}>
+              Return to the 15-line page
+            </button>
+          ) : null}
+
+          <div className="size-control-head english-head">
+            <span>English</span>
+            <span className="font-size-value">{Math.round(uiScale * 100)}%</span>
+          </div>
+          <div className="font-size-row">
+            <button
+              className="icon-btn"
+              onClick={() => setUiScale(clamp(uiScale - 0.05, 0.9, 1.3))}
+              aria-label="Decrease English size"
+            >
+              <Minus size={15} />
+            </button>
+            <input
+              type="range"
+              min="0.9"
+              max="1.3"
+              step="0.05"
+              value={uiScale}
+              onChange={(e) => setUiScale(Number(e.target.value))}
+              aria-label="English font size"
+            />
+            <button
+              className="icon-btn"
+              onClick={() => setUiScale(clamp(uiScale + 0.05, 0.9, 1.3))}
+              aria-label="Increase English size"
+            >
+              <span className="plus-glyph">+</span>
+            </button>
+          </div>
+          <div className="settings-preview english-preview" dir="ltr">
+            The Book — a guidance for the conscious.
           </div>
         </div>
 
@@ -87,7 +144,12 @@ export function SettingsPopover({
 
         <button
           className="btn btn-ghost reset-btn"
-          onClick={() => { setFontScale(1); setTheme('system'); setShowTranslit(true) }}
+          onClick={() => {
+            setArabicScale(1)
+            setUiScale(1)
+            setTheme('system')
+            setShowTranslit(true)
+          }}
         >
           <RotateCcw size={14} /> Reset preferences
         </button>

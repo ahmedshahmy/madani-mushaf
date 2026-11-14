@@ -13,6 +13,7 @@ place that word appears in the Qur'an.
 <p align="center">
   <img src="docs/lane-panel.jpg" alt="Lane's Lexicon article in the root panel" width="30%" />
   <img src="docs/mobile.jpg" alt="The reader on a phone" width="30%" />
+  <img src="docs/large-text.jpg" alt="Large-print flowing layout on a phone" width="30%" />
 </p>
 
 ## What it does
@@ -32,8 +33,10 @@ place that word appears in the Qur'an.
     whole root, with the surrounding words and a click-through to the page.
 - **Search** by Arabic word, English meaning, root transliteration (`k-t-b`), sūrah, page
   or verse reference (`2:255`). <kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>.
-- **Reading aids** — page/sūrah/juz navigation, bookmarks, light/dark mode, adjustable
-  Arabic size, keyboard page turning, swipe gestures, shareable URLs, and a mobile layout.
+- **Reading aids** — page/sūrah/juz navigation, bookmarks, light/dark mode, independent
+  **Arabic and English text sizes**, keyboard page turning, swipe gestures, shareable URLs,
+  and a mobile layout. On phones, increasing Arabic above 100% reflows the page into a
+  scrollable large-print column; at 100% the fixed 15-line Madanī page is preserved.
 - **No backend.** A fully static Vite build; the data is a set of JSON shards that are
   fetched lazily per page or per word family.
 

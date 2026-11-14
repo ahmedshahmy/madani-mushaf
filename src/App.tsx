@@ -64,13 +64,20 @@ export default function App() {
   const [grammarGuideOpen, setGrammarGuideOpen] = useState(false)
 
   const [bookmarks, setBookmarks] = useLocalStorage<BookmarkEntry[]>('mushaf.bookmarks', [])
-  const [fontScale, setFontScale] = useLocalStorage<number>('mushaf.fontScale', 1)
+  const [arabicScale, setArabicScale] = useLocalStorage<number>('mushaf.arabicScale', 1)
+  const [uiScale, setUiScale] = useLocalStorage<number>('mushaf.uiScale', 1)
   const [showTranslit, setShowTranslit] = useLocalStorage<boolean>('mushaf.translit', true)
   const [hintDismissed, setHintDismissed] = useLocalStorage<boolean>('mushaf.hintDismissed', false)
 
   const { theme, setTheme, resolved } = useTheme()
   const isMobile = useMediaQuery('(max-width: 860px)')
   const { toasts, push: pushToast, dismiss } = useToasts()
+
+  // Scale the UI text without touching the mushaf's fit-to-page Arabic sizing.
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${16 * uiScale}px`
+    return () => { document.documentElement.style.fontSize = '' }
+  }, [uiScale])
 
   const swipeStart = useRef<{ x: number; y: number } | null>(null)
 
@@ -250,6 +257,7 @@ export default function App() {
   const root = selectedWord?.r !== undefined ? lexicon?.rootById.get(selectedWord.r) : undefined
   const isBookmarked = bookmarks.some((b) => b.page === pageNum)
   const showSkeleton = (!meta && !metaError) || loadingPage || !page || page.p !== pageNum
+  const reflow = isMobile && arabicScale > 1.02
 
   const openOccurrences = useCallback((filter: OccFilter, lemmaId?: number | null) => {
     setPanelTab('occurrences')
@@ -350,7 +358,8 @@ export default function App() {
                     setOccFilter('form')
                     setLemmaFocus(null)
                   }}
-                  fontScale={fontScale}
+                  arabicScale={arabicScale}
+                  reflow={reflow}
                 />
               </div>
             )}
@@ -371,6 +380,11 @@ export default function App() {
               <span className="meta-pill">Juz {page?.juz ?? '—'}</span>
               <span className="meta-pill">Hizb {page?.hizb ?? '—'}</span>
               {chapterNames.length ? <span className="meta-surah">{chapterNames.join(' · ')}</span> : null}
+              {reflow ? (
+                <button className="meta-pill reflow-pill" onClick={() => setSettingsOpen(true)} title="Large-print flowing layout">
+                  Large text
+                </button>
+              ) : null}
               {page?.sajdah ? <span className="meta-pill sajdah-pill">Sajdah</span> : null}
             </div>
             <div className="page-meta-right">
@@ -432,8 +446,10 @@ export default function App() {
         onClose={() => setSettingsOpen(false)}
         theme={theme}
         setTheme={setTheme}
-        fontScale={fontScale}
-        setFontScale={setFontScale}
+        arabicScale={arabicScale}
+        setArabicScale={setArabicScale}
+        uiScale={uiScale}
+        setUiScale={setUiScale}
         showTranslit={showTranslit}
         setShowTranslit={setShowTranslit}
       />
