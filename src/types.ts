@@ -124,6 +124,23 @@ export interface DerivedLemma {
   page: number
 }
 
+export interface LaneEntry {
+  id: number
+  root: string
+  bw: string
+  tr: string
+  found: boolean
+  html: string
+  pages: [number, number] | null
+  shownPages: [number, number] | null
+  chars: number
+  entries: number
+  shownEntries: number
+  truncated: boolean
+  match: 'direct' | 'div2' | 'parent' | null
+  key: string | null
+}
+
 export interface RootDetail {
   id: number
   ar: string

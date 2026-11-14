@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, Loader2, Sprout } from 'lucide-react'
-import type { Lemma, OccFilter, Root, RootDetail, Word } from '../../types'
-import { loadRoot } from '../../lib/data'
+import type { LaneEntry, Lemma, OccFilter, Root, RootDetail, Word } from '../../types'
+import { loadLane, loadRoot } from '../../lib/data'
 import { formatNumber, prettyArabic, stripPauseMarks } from '../../lib/format'
+import { LaneSection } from '../LaneSection'
 
 interface RootTabProps {
   word: Word
@@ -14,15 +15,25 @@ interface RootTabProps {
 export function RootTab({ word, lemma, root, onOpenOccurrences }: RootTabProps) {
   const [detail, setDetail] = useState<RootDetail | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [lane, setLane] = useState<LaneEntry | null>(null)
+  const [laneLoading, setLaneLoading] = useState(false)
+  const [laneError, setLaneError] = useState<string | null>(null)
 
   useEffect(() => {
     let alive = true
     setDetail(null)
     setError(null)
+    setLane(null)
+    setLaneError(null)
+    setLaneLoading(false)
     if (word.r === undefined) return
+    setLaneLoading(true)
     loadRoot(word.r)
       .then((data) => { if (alive) setDetail(data) })
       .catch((err) => { if (alive) setError(err instanceof Error ? err.message : 'Could not load root') })
+    loadLane(word.r)
+      .then((data) => { if (alive) { setLane(data); setLaneLoading(false) } })
+      .catch((err) => { if (alive) { setLaneError(err instanceof Error ? err.message : 'Could not load Lane entry'); setLaneLoading(false) } })
     return () => { alive = false }
   }, [word.r])
 
@@ -86,6 +97,15 @@ export function RootTab({ word, lemma, root, onOpenOccurrences }: RootTabProps) 
         </section>
       ) : null}
 
+      {lane || laneLoading || laneError ? (
+        <LaneSection
+          key={word.r}
+          entry={lane ?? ({ found: false } as LaneEntry)}
+          loading={laneLoading}
+          error={laneError}
+        />
+      ) : null}
+
       <section className="derivations-section">
         <div className="section-head">
           <div>
@@ -134,6 +154,7 @@ export function RootTab({ word, lemma, root, onOpenOccurrences }: RootTabProps) 
 
       <p className="fine-note source-note">
         Root and lemma grouping from the Quranic Arabic Corpus morphology (v0.4).
+        Lane's Lexicon article from the Perseus digital edition.
       </p>
     </div>
   )

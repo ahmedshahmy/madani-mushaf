@@ -23,7 +23,8 @@ place that word appears in the Qur'an.
   - **Meaning** — the word-by-word English gloss and transliteration, the full verse and
     its Saheeh International translation.
   - **Root** — the triliteral root, its core senses, every derived lemma, the verb form,
-    frequency and the forms that actually occur in the Qur'an.
+    frequency and the forms that actually occur in the Qur'an — plus the matching
+    **Lane's Arabic-English Lexicon** article, with page references and a collapsible reader.
   - **Grammar** — part of speech, case/mood, tense, voice, definiteness, attached prefixes
     and pronoun suffixes, plus short explanations of the rules at work.
   - **Uses** — every occurrence of the exact form, the dictionary word (lemma), or the
@@ -44,6 +45,7 @@ place that word appears in the Qur'an.
 | Words | **77,429** |
 | Roots | **1,642** |
 | Dictionary entries | **4,864** (4,832 corpus lemmas + pronouns and disconnected letters) |
+| Lane entries | **1,641** of 1,642 Qur'anic roots (one rare root has no separate article) |
 
 Every word is aligned to the Quranic Arabic Corpus morphology by sūrah, verse and word
 position. Roots, lemmas, segments and features are reorganised into small JSON files;
@@ -59,6 +61,10 @@ occurrences are grouped by root and lemma. All 77,429 words are verified to land
   verse translation.
 - **[Tanzil Quran Text](https://tanzil.net)** — the verified Uthmani text underlying the
   corpus (CC BY-ND 3.0, reproduced verbatim).
+- **[Lane's Arabic-English Lexicon](https://www.perseus.tufts.edu/hopper/collection?collection=Perseus:corpus:perseus,work,Lane,%20An%20Arabic-English%20Lexicon)** —
+  Edward William Lane's 1863–1893 dictionary, public domain, from the Perseus Digital
+  Library TEI edition. Arabic words are converted from the edition's transliteration for
+  display; long articles are excerpted and collapsible.
 - **[QUL 15-line Madani layouts](https://github.com/blueheron786/quranic-universal-library-mushaf-layouts)**
   — the 15-line page structure and line types used for the sūrah/basmala lines.
 - **Fonts** — [Scheherazade New](https://software.sil.org/scheherazade/),
@@ -80,6 +86,7 @@ scripts/fetch_pages.py     fetch the Quran.com pages with explicit page/line fie
 scripts/fetch_sources.sh   fetch morphology + QUL layout + pages
 scripts/build_data.py      align morphology, build lemmas/roots/features
 scripts/build_final.py     emit compact page, root, occurrence and lexicon shards
+scripts/build_lane.py      extract Lane's Lexicon articles into per-root HTML
 public/quran/              the generated static bundle (~26 MB)
 src/                       React reader
 ```
@@ -91,8 +98,8 @@ without repeating the upstream fetches.
 
 ```bash
 bash scripts/fetch_sources.sh   # Python 3, curl, unzip
-npm run data                    # build_data.py + build_final.py
-npm run verify                  # asserts 604 / 6,236 / 77,429 / 1,642 / 4,864
+npm run data                    # build_data, build_final and build_lane
+npm run verify                  # asserts pages, words, roots, lemmas, occurrences and Lane files
 ```
 
 ### Local development
@@ -122,6 +129,7 @@ Then set **Settings → Pages → Deploy from a branch → `gh-pages` / root**. 
   sūrah/basmala bands, verse rosettes and clickable words.
 - `src/components/WordPanel.tsx` and `src/components/tabs/` — meaning, root, grammar and
   occurrence views.
+- `src/components/LaneSection.tsx` — the lazy-loaded, collapsible Lane's Lexicon article.
 - `src/lib/grammar.ts` — maps corpus features to English grammar labels and rule cards.
 - `src/lib/data.ts` — lazy JSON loading and caches.
 - `src/lib/format.ts` — Arabic normalisation (including the Qur'anic dagger alef) and

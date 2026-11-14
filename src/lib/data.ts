@@ -1,5 +1,5 @@
 import type {
-  DerivedLemma, Lemma, Lexicon, Meta, Occurrence, PageData, Root, RootDetail,
+  DerivedLemma, LaneEntry, Lemma, Lexicon, Meta, Occurrence, PageData, Root, RootDetail,
 } from '../types'
 
 const BASE = import.meta.env.BASE_URL
@@ -135,6 +135,21 @@ export function loadRoot(id: number): Promise<RootDetail> {
     }))
     rootCache.set(id, p)
     p.catch(() => rootCache.delete(id))
+  }
+  return p
+}
+
+/* ------------------------------------------------------------------ */
+/* Lane's Lexicon                                                       */
+/* ------------------------------------------------------------------ */
+const laneCache = new Map<number, Promise<LaneEntry>>()
+
+export function loadLane(rootId: number): Promise<LaneEntry> {
+  let p = laneCache.get(rootId)
+  if (!p) {
+    p = fetchJSON<LaneEntry>(`quran/lane/${rootId}.json`)
+    laneCache.set(rootId, p)
+    p.catch(() => laneCache.delete(rootId))
   }
   return p
 }

@@ -7,3 +7,4 @@ data/intermediate.json
 .env
 .env.*
 *.log
+data/lane-report.json

@@ -36,6 +36,13 @@ for path in files:
 occ_files = glob.glob(os.path.join(QURAN, "occ", "*.json"))
 occ_count = sum(len(json.load(open(p, encoding="utf-8"))) for p in occ_files)
 
+lane_files = glob.glob(os.path.join(QURAN, "lane", "*.json"))
+lane_found = 0
+for p in lane_files:
+    d = json.load(open(p, encoding="utf-8"))
+    if d.get("found"):
+        lane_found += 1
+
 checks = {
     "pages": (len(files), 604),
     "words": (len(word_ids), meta["wordCount"]),
@@ -43,6 +50,7 @@ checks = {
     "lemmas": (len(lemmas), meta["lemmaCount"]),
     "roots": (len(roots), meta["rootCount"]),
     "occurrences": (occ_count, meta["wordCount"]),
+    "lane": (len(lane_files), meta["rootCount"]),
 }
 for name, (got, want) in checks.items():
     if got != want:
@@ -52,6 +60,7 @@ if len(roots) != 1642:
     errors.append(f"unexpected root count {len(roots)}")
 
 print("Mushaf bundle:", json.dumps({k: v[0] for k, v in checks.items()}))
+print(f"Lane entries: {lane_found}/{len(lane_files)} roots with a mapped article")
 if errors:
     print("\n".join(f"ERROR: {e}" for e in errors[:30]))
     sys.exit(1)

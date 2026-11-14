@@ -901,6 +901,8 @@ html[data-theme='dark'] .word-panel { box-shadow: -18px 0 60px rgba(0, 0, 0, 0.4
    ========================================================================== */
 @media (max-width: 860px) {
   :root { --header-h: 116px; }
+  .lane-body { max-height: 190px; font-size: 0.73rem; }
+  .lane-body.is-expanded { max-height: 52vh; }
   .header-main { padding: 8px 12px; flex-wrap: wrap; gap: 8px 10px; }
   .brand { gap: 8px; }
   .brand-sub { display: none; }
@@ -978,4 +980,69 @@ html[data-theme='dark'] .word-panel { box-shadow: -18px 0 60px rgba(0, 0, 0, 0.4
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+/* ==========================================================================
+   Lane's Lexicon
+   ========================================================================== */
+.lane-card {
+  background: var(--paper-2);
+  border: 1px solid var(--line-soft);
+  border-radius: 13px;
+  padding: 14px;
+}
+.lane-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.lane-head h3 { margin: 2px 0 0; font-size: 0.94rem; font-weight: 600; }
+.lane-pages {
+  flex: 0 0 auto; font-size: 0.62rem; color: var(--gold-strong);
+  background: var(--gold-faint); border: 1px solid color-mix(in srgb, var(--gold) 24%, transparent);
+  padding: 2px 7px; border-radius: 999px; white-space: nowrap;
+}
+.lane-match { margin: 7px 0 0; font-size: 0.68rem; color: var(--muted); line-height: 1.5; }
+.lane-match b { font-family: 'Noto Naskh Arabic', serif; color: var(--ink-soft); font-weight: 500; }
+.lane-body-wrap { position: relative; margin-top: 9px; }
+.lane-body {
+  max-height: 230px; overflow: hidden;
+  font-size: 0.76rem; line-height: 1.68; color: var(--ink-soft);
+  text-align: justify; overflow-wrap: break-word;
+}
+.lane-body.is-expanded { max-height: 58vh; overflow-y: auto; padding-right: 5px; }
+.lane-body.is-expanded::-webkit-scrollbar { width: 7px; }
+.lane-body.is-expanded::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+.lane-body .lane-entry { margin: 0 0 0.65em; }
+.lane-body .lane-entry:last-child { margin-bottom: 0; }
+.lane-body em { color: var(--ink); font-style: italic; }
+.lane-body q { quotes: '“' '”'; }
+.lane-ar {
+  font-family: 'Noto Naskh Arabic', 'Scheherazade New', serif;
+  font-size: 1.08em; color: var(--ink); unicode-bidi: isolate;
+  white-space: normal;
+}
+.lane-form { color: var(--ink); }
+.lane-arrow { color: var(--gold-strong); font-size: 0.9em; }
+.lane-pb {
+  display: inline-block; font-family: 'Outfit', sans-serif; font-size: 0.56rem;
+  line-height: 1.5; padding: 0 4px; margin: 0 3px; border-radius: 3px;
+  color: var(--gold-strong); background: var(--gold-faint);
+  border: 1px solid color-mix(in srgb, var(--gold) 20%, transparent);
+  vertical-align: 1px; white-space: nowrap;
+}
+.lane-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 62px;
+  background: linear-gradient(180deg, transparent, var(--paper-2));
+  pointer-events: none;
+}
+.lane-toggle { width: 100%; margin-top: 8px; }
+.lane-source { display: flex; gap: 6px; align-items: flex-start; }
+.lane-source svg { flex: 0 0 auto; margin-top: 2px; color: var(--muted-2); }
+.lane-source a { display: inline-flex; align-items: center; gap: 2px; }
+.lane-empty { margin: 7px 0 0; font-size: 0.75rem; line-height: 1.6; color: var(--muted); }
+.lane-skeleton { display: flex; flex-direction: column; gap: 8px; margin-top: 11px; }
+.lane-skeleton .skeleton-line { display: block; height: 10px; width: 100%; margin: 0; }
+.lane-skeleton .skeleton-line.short { width: 62%; }
+.lane-loading .lane-head { align-items: center; }
+
+@media (max-width: 860px) {
+  .lane-body { max-height: 190px; font-size: 0.73rem; }
+  .lane-body.is-expanded { max-height: 52vh; }
 }

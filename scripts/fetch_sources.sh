@@ -26,4 +26,8 @@ fi
 
 echo "Fetching the 604 Quran.com pages and chapter metadata…"
 python3 scripts/fetch_pages.py
+
+echo "Fetching Lane's Arabic-English Lexicon (Perseus XML)…"
+python3 scripts/fetch_lane.py
+
 echo "Sources ready. Run: npm run data"

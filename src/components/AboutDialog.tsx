@@ -49,6 +49,16 @@ export function AboutDialog({ open, onClose, meta }: { open: boolean; onClose: (
               <span>The verified Uthmani text underlying the corpus. CC BY-ND 3.0; reproduced verbatim.</span>
             </li>
             <li>
+              <a href="https://www.perseus.tufts.edu/hopper/collection?collection=Perseus:corpus:perseus,work,Lane,%20An%20Arabic-English%20Lexicon" target="_blank" rel="noreferrer">
+                Lane's Arabic-English Lexicon <ExternalLink size={12} />
+              </a>
+              <span>
+                Edward William Lane's 1863–1893 dictionary, public domain; electronic text from the
+                Perseus Digital Library. Arabic transliteration is rendered in Arabic script, and
+                long articles are excerpted in the panel.
+              </span>
+            </li>
+            <li>
               <a href="https://github.com/blueheron786/quranic-universal-library-mushaf-layouts" target="_blank" rel="noreferrer">
                 QUL 15-line Madani layout <ExternalLink size={12} />
               </a>
@@ -66,7 +76,9 @@ export function AboutDialog({ open, onClose, meta }: { open: boolean; onClose: (
             Every one of the 77,429 words is aligned with the Quranic Arabic Corpus morphology by
             sūrah, verse and word position. Roots, lemmas, segments and features are reorganised into
             small JSON files; occurrences are grouped by root and lemma. Grammar explanations are
-            generated from the corpus features, not from a tafsīr.
+            generated from the corpus features, not from a tafsīr. The Root panel adds the matching
+            Lane's Lexicon article, extracted from the Perseus TEI edition and converted from
+            transliteration into Arabic script.
           </p>
         </section>
 
